@@ -33,3 +33,29 @@ int main()
 	}
 
 }
+
+int C(const int k, int b, int n)
+{
+	if (n <= 2)
+	{
+		/*if (k == b)
+			return 1;*/
+		if (b <= k)
+			return b;
+		else if (n * k > b)
+			//This needs to be solved
+			return NULL;
+		else
+			return 0;
+	}
+	else if (b == 1)
+		return n;
+	else if (b == 0)
+		return 0;
+	int total = 0;
+	for (int i = 1; i < k; i++)
+	{
+		total += C(k, n - 1, b - i);
+	}
+	return total;
+}
