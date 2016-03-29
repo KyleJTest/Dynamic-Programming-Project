@@ -34,7 +34,7 @@ int main()
 
 }
 
-int C(const int k, int b, int n)
+int C(const int k, int n, int b)
 {
 	if (n <= 2)
 	{
@@ -42,9 +42,11 @@ int C(const int k, int b, int n)
 			return 1;*/
 		if (b <= k)
 			return b;
-		else if (n * k > b)
-			//This needs to be solved
-			return NULL;
+		else if (2 * k >= b)
+		{
+			//Still need to resolve this
+			return 0;
+		}
 		else
 			return 0;
 	}
