@@ -1,4 +1,20 @@
-#include <string.h>
+/*
+Main.cpp:
+-- Full console program that resolves the problem of uniform capacity baskets and a given amount of balls
+-- Resolves multiple instances in single run
+-- Contains 
+   + Main(),
+   + print(),
+	-- Prints results
+   + input(),
+    -- Creates 2D vector of input vals
+	--- input[i][0] => 'k' value
+	--- input[i][1] => 'n' value
+	--- input[i][2] => 'b' value
+   + recursiveBasketing() functions
+	-- Recursive 'Divide and Conquer' algorithm for Combination(k,n,b) problem
+	-- n baskets able to hold k balls, with b total balls
+*/
 #include <string>
 #include <iostream>
 #include <vector>
@@ -9,7 +25,7 @@ using namespace std;
 
 vector<vector<int>> input(int &, vector<vector<int>>);
 void print(vector<int>);
-int C(const int, int, int);
+int recursiveBasketing(int**&, const int, int, int);
 
 
 int main()
@@ -18,17 +34,33 @@ int main()
 	vector<vector<int>> arguments;
 	arguments = input(count, arguments);
 	vector<int> results;
-
+	int** knownVals;													//2D Array kV[][]; should be kV[n][b] : kV[n][b] == C(n, b)
 	for (int i = 0; i < count; i++)
 	{
-		int temp = C(arguments[i][0], arguments[i][1], arguments[i][2]);
+		//Initialize an array of arrays for this instance;
+		//-- Initialize kV[n]
+		knownVals = new int*[arguments[i][1]];
+		//-- Setup the kV[n] array so that each [1..n-1] points to a sub-array for [b]
+		for (int j = 0; j < arguments[i][1]; j++)
+		{
+			knownVals[j] = new int[arguments[i][2]];
+		}
+		int temp = recursiveBasketing(knownVals, arguments[i][0], arguments[i][1], arguments[i][2]);
 		results.push_back(temp);
+
+		//Free subarrays [0..b-1] for kV[][]
+		for (int j = 0; j < count; j++)
+		{
+			delete[] knownVals[j];
+		}
+		//And again [0..n-1] for kV[][]
+		delete[] knownVals;
 	}
 
 	print(results);
 }
 
-int C(const int k, int n, int b)
+int recursiveBasketing(int** &knownVals, const int k, int n, int b)
 {
 	if (n <= 2)
 	{
@@ -51,7 +83,11 @@ int C(const int k, int n, int b)
 	int total = 0;
 	for (int i = 1; i < k; i++)
 	{
-		total += C(k, n - 1, b - i);
+		//kV[n][b] == knownVals[n-1][b-1], so C(n-1,b-i) == knownVals[n-1-1][b-i-1], or knownVals[n-2][b-i-1]
+		//If this is confusing, we can go back and index from [1..n][1..b] instead of [0..n-1][0..b-1]
+		if (knownVals[n - 2][b - i - 1] == -1)												//Does not exist in table
+			knownVals[n - 2][b - i - 1] = recursiveBasketing(knownVals, k, n - 1, b - i);	//Calc and it in table
+		total += knownVals[n - 2][b - i - 1];												//It's in table for sure, so add it to total
 	}
 	return total;
 }
