@@ -44,6 +44,8 @@ int main()
 		for (int j = 0; j < arguments[i][1]; j++)
 		{
 			knownVals[j] = new int[arguments[i][2]];
+			for (i = 0; i < arguments[i][2]; i++)
+				knownVals[j][i] = -1;
 		}
 		int temp = recursiveBasketing(knownVals, arguments[i][0], arguments[i][1], arguments[i][2]);
 		results.push_back(temp);
@@ -62,20 +64,8 @@ int main()
 
 int recursiveBasketing(int** &knownVals, const int k, int n, int b)
 {
-	if (n <= 2)
-	{
-		/*if (k == b)
-			return 1;*/
-		if (b <= k)
-			return b;
-		else if (2 * k >= b)
-		{
-			//Still need to resolve this
-			return 0;
-		}
-		else
-			return 0;
-	}
+	if (n * k < b)
+		return 0;
 	else if (b == 1)
 		return n;
 	else if (b == 0)
