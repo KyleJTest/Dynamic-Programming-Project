@@ -8,6 +8,7 @@
 using namespace std;
 
 vector<vector<int>> input(int &, vector<vector<int>>);
+void print(vector<int>);
 int C(const int, int, int);
 
 
@@ -16,7 +17,15 @@ int main()
 	int count = 0;
 	vector<vector<int>> arguments;
 	arguments = input(count, arguments);
+	vector<int> results;
 
+	for (int i = 0; i < count; i++)
+	{
+		int temp = C(arguments[i][0], arguments[i][1], arguments[i][2]);
+		results.push_back(temp);
+	}
+
+	print(results);
 }
 
 int C(const int k, int n, int b)
@@ -71,4 +80,14 @@ vector<vector<int>> input(int &count, vector<vector<int>> args)
 		}
 	}
 	return args;
+}
+
+void print(vector<int> results)
+{
+	ofstream file;
+	file.open("output.txt");
+	for (int i = 0; i < results.size(); i++)
+	{
+		file << results[i] << endl;
+	}
 }
