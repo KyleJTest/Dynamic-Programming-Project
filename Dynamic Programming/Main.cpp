@@ -44,8 +44,8 @@ int main()
 		for (int j = 0; j < arguments[i][1]; j++)
 		{
 			knownVals[j] = new int[arguments[i][2]];
-			for (i = 0; i < arguments[i][2]; i++)
-				knownVals[j][i] = -1;
+			for (int k = 0; k < arguments[i][2]; k++)
+				knownVals[j][k] = -1;
 		}
 		int temp = recursiveBasketing(knownVals, arguments[i][0], arguments[i][1], arguments[i][2]);
 		results.push_back(temp);
@@ -60,12 +60,14 @@ int main()
 	}
 
 	print(results);
+	int hold = 0;
 }
 
 int recursiveBasketing(int** &knownVals, const int k, int n, int b)
 {
 	if (n * k < b)
 		return 0;
+
 	else if (b == 1)
 		return n;
 	else if (b == 0)
@@ -112,7 +114,7 @@ void print(vector<int> results)
 {
 	ofstream file;
 	file.open("output.txt");
-	for (int i = 0; i < results.size(); i++)
+	for (unsigned int i = 0; i < results.size(); i++)
 	{
 		file << results[i] << endl;
 	}
