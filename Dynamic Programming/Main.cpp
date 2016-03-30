@@ -7,30 +7,15 @@
 #include <sstream>
 using namespace std;
 
+vector<vector<int>> input(int &, vector<vector<int>>);
+int C(const int, int, int);
+
+
 int main()
 {
-	string line;
-	ifstream file ("input.txt");
 	int count = 0;
 	vector<vector<int>> arguments;
-
-	if(file.is_open())
-	{
-		getline(file, line);
-		count = atoi(line.c_str());
-		while( getline(file, line))
-		{
-			vector<int> temp;
-			stringstream stream(line);
-			int num;
-			while(stream >> num)
-			{
-				temp.push_back(num);
-			}
-
-			arguments.push_back(temp);
-		}
-	}
+	arguments = input(count, arguments);
 
 }
 
@@ -60,4 +45,30 @@ int C(const int k, int n, int b)
 		total += C(k, n - 1, b - i);
 	}
 	return total;
+}
+
+
+vector<vector<int>> input(int &count, vector<vector<int>> args)
+{
+	string line;
+	ifstream file("input.txt");
+
+	if (file.is_open())
+	{
+		getline(file, line);
+		count = atoi(line.c_str());
+		while (getline(file, line))
+		{
+			vector<int> temp;
+			stringstream stream(line);
+			int num;
+			while (stream >> num)
+			{
+				temp.push_back(num);
+			}
+
+			args.push_back(temp);
+		}
+	}
+	return args;
 }
