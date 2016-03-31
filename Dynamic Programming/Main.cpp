@@ -25,7 +25,7 @@ using namespace std;
 
 vector<vector<int>> input(int &, vector<vector<int>>);
 void print(vector<int>);
-int recursiveBasketing(int**&, const int, int, int);
+int recursiveBasketing(vector<vector<int>>&, int, int, int);
 
 int main()
 {
@@ -33,32 +33,26 @@ int main()
 	vector<vector<int>> arguments;
 	arguments = input(count, arguments);
 	vector<int> results;
-	int** knownVals;													//2D Array kV[][]; should be kV[n][b] : kV[n][b] == C(n, b)
+	//int** knownVals;													//2D Array kV[][]; should be kV[n][b] : kV[n][b] == C(n, b)
 	for (int i = 0; i < count; i++)
 	{
+		vector<vector<int>> knownVals;
 		int n = arguments[i][1];
 		int b = arguments[i][0];
 		int k = arguments[i][2];
 		//Initialize an array of arrays for this instance;
 		//-- Initialize kV[n]
-		knownVals = new int*[n];
+		knownVals.resize(n + 1);
 		//-- Setup the kV[n] array so that each [1..n-1] points to a sub-array for [b]
-		for (int iterN = 0; iterN < n; iterN++)
+		for (int iterN = 0; iterN < n+1; iterN++)
 		{
-			knownVals[iterN] = new int[b];
-			for (int iterB = 0; iterB < b; iterB++)
+			knownVals[iterN].resize(b+1);
+			for (int iterB = 0; iterB <= b; iterB++)
 				knownVals[iterN][iterB] = -1;
 		}
 		int total = recursiveBasketing(knownVals, k, n, b);
 		cout << "Total for (n=" << n << ",k=" << k << ",b=" << b << ") is: " << total << endl;
 		results.push_back( recursiveBasketing(knownVals, k, n, b) );
-		//Free subarrays [0..b-1] for kV[][]
-/*		for (int j = 0; j < arguments[i][0]; j++)
-		{
-			delete[] knownVals[j];
-		}
-		//And again [0..n-1] for kV[][]
-		delete[] knownVals;*/
 	}
 
 	print(results);
@@ -67,9 +61,11 @@ int main()
 	cin >> hold;
 }
 
-int recursiveBasketing(int** &knownVals, int k, int n, int b)
+int recursiveBasketing(vector<vector<int>> &knownVals, int k, int n, int b)
 {
 
+	if (knownVals[n][b] > -1)
+		return knownVals[n][b];
 	if (n * k < b)
 	{
 		return 0;
@@ -90,6 +86,7 @@ int recursiveBasketing(int** &knownVals, int k, int n, int b)
 	{
 		total += recursiveBasketing(knownVals, k, n - 1, b - i);
 	}
+	knownVals[n][b] = total;
 	return total;
 }
 
