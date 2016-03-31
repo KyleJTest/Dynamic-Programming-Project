@@ -8,12 +8,13 @@ Main.cpp:
 	-- Prints results
    + input(),
     -- Creates 2D vector of input vals
-	--- input[i][0] => 'k' value
+	--- input[i][0] => 'b' value
 	--- input[i][1] => 'n' value
-	--- input[i][2] => 'b' value
+	--- input[i][2] => 'k' value
    + recursiveBasketing() functions
 	-- Recursive 'Divide and Conquer' algorithm for Combination(k,n,b) problem
 	-- n baskets able to hold k balls, with b total balls
+	-- Information is held in knownVals for dynamic programming usage.
 */
 #include <string>
 #include <iostream>
