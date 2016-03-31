@@ -41,7 +41,7 @@ int main()
 		int n = arguments[i][1];
 		int b = arguments[i][0];
 		int k = arguments[i][2];
-		//Initialize an array of arrays for this instance;
+		//Initialize an array of arrays for this instance; using vectors
 		//-- Initialize kV[n]
 		knownVals.resize(n + 1);
 		//-- Setup the kV[n] array so that each [1..n-1] points to a sub-array for [b]
@@ -52,14 +52,10 @@ int main()
 				knownVals[iterN][iterB] = -1;
 		}
 		int total = recursiveBasketing(knownVals, k, n, b);
-		cout << "Total for (n=" << n << ",k=" << k << ",b=" << b << ") is: " << total << endl;
 		results.push_back( recursiveBasketing(knownVals, k, n, b) );
 	}
 
 	print(results);
-
-	int hold = 0;
-	cin >> hold;
 }
 
 int recursiveBasketing(vector<vector<int>> &knownVals, int k, int n, int b)
