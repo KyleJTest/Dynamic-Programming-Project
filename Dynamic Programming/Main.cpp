@@ -26,8 +26,6 @@ using namespace std;
 vector<vector<int>> input(int &, vector<vector<int>>);
 void print(vector<int>);
 int recursiveBasketing(int**&, const int, int, int);
-int array[5][5][5] = { 0 };
-int max_k = 0;
 
 int main()
 {
@@ -38,25 +36,22 @@ int main()
 	int** knownVals;													//2D Array kV[][]; should be kV[n][b] : kV[n][b] == C(n, b)
 	for (int i = 0; i < count; i++)
 	{
+		int n = arguments[i][1];
+		int b = arguments[i][0];
+		int k = arguments[i][2];
 		//Initialize an array of arrays for this instance;
 		//-- Initialize kV[n]
-		knownVals = new int*[arguments[i][1]];
+		knownVals = new int*[n];
 		//-- Setup the kV[n] array so that each [1..n-1] points to a sub-array for [b]
-		for (int j = 0; j < arguments[i][1]; j++)
+		for (int iterN = 0; iterN < n; iterN++)
 		{
-			knownVals[j] = new int[arguments[i][0]];
-			for (int k = 0; k < arguments[i][0]; k++)
-				knownVals[j][k] = -1;
+			knownVals[iterN] = new int[b];
+			for (int iterB = 0; iterB < b; iterB++)
+				knownVals[iterN][iterB] = -1;
 		}
-		int temp = 0;
-		for (int z = 0; z < arguments[i][1]; z++)
-		{
-			cout << "====== Z = " << z << endl << endl;
-			max_k = arguments[i][2];
-			temp += recursiveBasketing(knownVals, arguments[i][2], arguments[i][1]-z, arguments[i][0]);
-			cout << "temp: " << temp << endl;
-		}
-		results.push_back(temp);
+		int total = recursiveBasketing(knownVals, k, n, b);
+		cout << "Total for (n=" << n << ",k=" << k << ",b=" << b << ") is: " << total << endl;
+		results.push_back( recursiveBasketing(knownVals, k, n, b) );
 		//Free subarrays [0..b-1] for kV[][]
 /*		for (int j = 0; j < arguments[i][0]; j++)
 		{
@@ -67,18 +62,8 @@ int main()
 	}
 
 	print(results);
+
 	int hold = 0;
-	cout << endl << endl << endl;
-	for (int i = 0; i < 5; i++)
-	{
-		for (int j = 0; j < 5; j++)
-		{
-			for (int z = 0; z < 5; z++)
-				cout << "  (" << i << "," << j << "," << z << "):= " << array[i][j][z];
-			cout << endl;
-		}
-		cout << endl;
-	}
 	cin >> hold;
 }
 
@@ -87,39 +72,24 @@ int recursiveBasketing(int** &knownVals, int k, int n, int b)
 
 	if (n * k < b)
 	{
-		cout << "case 1" << endl;
 		return 0;
 	}
 	else if (n == 1)
 	{
-		cout << "case 2" << endl;
-		array[n][b][k] = 1;
 		return 1;
 	}
 	else if (b == 1)
 	{
-		cout << "case 3" << endl;
-		array[n][b][k] = n;
 		return n;
 	}
-	else if (b <= 0)
-	{
-		cout << "case 4" << endl;
-		return 0;
-	}
+	if (b == 0)
+		return 1;
 	int total = 0;
-	total += recursiveBasketing(knownVals, k, n - 1, b);
-	cout << "\n C(" << k << "," << n << "," << b << ") calls: \n";
-	for (int i = 1; i <= k && b > i; i++)
+
+	for (int i = 0; i <= k && b >= i; i++)
 	{
-		int temp = 0;
-		cout << "C(" << k << "," << n - 1 << "," << b - i << ")";
-		temp = recursiveBasketing(knownVals, k, n - 1, b - i);
-		total += temp;
-		cout << "temp: " << temp << " total: " << total << "\n";
+		total += recursiveBasketing(knownVals, k, n - 1, b - i);
 	}
-	if (total > 0)
-		array[n][b][k] = total;
 	return total;
 }
 
