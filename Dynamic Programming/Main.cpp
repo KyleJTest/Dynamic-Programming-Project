@@ -26,7 +26,8 @@ using namespace std;
 vector<vector<int>> input(int &, vector<vector<int>>);
 void print(vector<int>);
 int recursiveBasketing(int**&, const int, int, int);
-
+int array[5][5][5] = { 0 };
+int max_k = 0;
 
 int main()
 {
@@ -43,47 +44,84 @@ int main()
 		//-- Setup the kV[n] array so that each [1..n-1] points to a sub-array for [b]
 		for (int j = 0; j < arguments[i][1]; j++)
 		{
-			knownVals[j] = new int[arguments[i][2]];
-			for (int k = 0; k < arguments[i][2]; k++)
+			knownVals[j] = new int[arguments[i][0]];
+			for (int k = 0; k < arguments[i][0]; k++)
 				knownVals[j][k] = -1;
 		}
-		int temp = recursiveBasketing(knownVals, arguments[i][0], arguments[i][1], arguments[i][2]);
+		int temp = 0;
+		for (int z = 0; z < arguments[i][1]; z++)
+		{
+			cout << "====== Z = " << z << endl << endl;
+			max_k = arguments[i][2];
+			temp += recursiveBasketing(knownVals, arguments[i][2], arguments[i][1]-z, arguments[i][0]);
+			cout << "temp: " << temp << endl;
+		}
 		results.push_back(temp);
-
 		//Free subarrays [0..b-1] for kV[][]
-		for (int j = 0; j < count; j++)
+/*		for (int j = 0; j < arguments[i][0]; j++)
 		{
 			delete[] knownVals[j];
 		}
 		//And again [0..n-1] for kV[][]
-		delete[] knownVals;
+		delete[] knownVals;*/
 	}
 
 	print(results);
 	int hold = 0;
+	cout << endl << endl << endl;
+	for (int i = 0; i < 5; i++)
+	{
+		for (int j = 0; j < 5; j++)
+		{
+			for (int z = 0; z < 5; z++)
+				cout << "  (" << i << "," << j << "," << z << "):= " << array[i][j][z];
+			cout << endl;
+		}
+		cout << endl;
+	}
+	cin >> hold;
 }
 
-int recursiveBasketing(int** &knownVals, const int k, int n, int b)
+int recursiveBasketing(int** &knownVals, int k, int n, int b)
 {
-	if (n * k < b)
-		return 0;
 
-	else if (b == 1)
-		return n;
-	else if (b == 0)
-		return 0;
-	int total = 0;
-	for (int i = 1; i < k; i++)
+	if (n * k < b)
 	{
-		//kV[n][b] == knownVals[n-1][b-1], so C(n-1,b-i) == knownVals[n-1-1][b-i-1], or knownVals[n-2][b-i-1]
-		//If this is confusing, we can go back and index from [1..n][1..b] instead of [0..n-1][0..b-1]
-		if (knownVals[n - 2][b - i - 1] == -1)												//Does not exist in table
-			knownVals[n - 2][b - i - 1] = recursiveBasketing(knownVals, k, n - 1, b - i);	//Calc and it in table
-		total += knownVals[n - 2][b - i - 1];												//It's in table for sure, so add it to total
+		cout << "case 1" << endl;
+		return 0;
 	}
+	else if (n == 1)
+	{
+		cout << "case 2" << endl;
+		array[n][b][k] = 1;
+		return 1;
+	}
+	else if (b == 1)
+	{
+		cout << "case 3" << endl;
+		array[n][b][k] = n;
+		return n;
+	}
+	else if (b <= 0)
+	{
+		cout << "case 4" << endl;
+		return 0;
+	}
+	int total = 0;
+	total += recursiveBasketing(knownVals, k, n - 1, b);
+	cout << "\n C(" << k << "," << n << "," << b << ") calls: \n";
+	for (int i = 1; i <= k && b > i; i++)
+	{
+		int temp = 0;
+		cout << "C(" << k << "," << n - 1 << "," << b - i << ")";
+		temp = recursiveBasketing(knownVals, k, n - 1, b - i);
+		total += temp;
+		cout << "temp: " << temp << " total: " << total << "\n";
+	}
+	if (total > 0)
+		array[n][b][k] = total;
 	return total;
 }
-
 
 vector<vector<int>> input(int &count, vector<vector<int>> args)
 {
